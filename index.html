@@ -3,121 +3,221 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plan Our Date</title>
+    <title>A Special Invitation</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@300;500;700&display=swap" rel="stylesheet">
+    
     <style>
         :root {
             --primary: #ff4d6d;
             --primary-dark: #c9184a;
-            --bg: #fff0f3;
-            --secondary: #800f2f;
-            --link: #0077cc;
+            --glass: rgba(255, 255, 255, 0.85);
+            --accent: #ff85a1;
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body { 
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-            background-color: var(--bg);
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fad0c4, #ffdde1);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
             display: flex; justify-content: center; align-items: center;
-            min-height: 100vh; margin: 0; padding: 20px;
+            min-height: 100vh; overflow: hidden;
         }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating Particles Container */
+        #particles {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0; pointer-events: none;
+        }
+
         .card {
-            background: white; padding: 40px; border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(255, 77, 109, 0.2);
-            width: 100%; max-width: 420px;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 25px 50px rgba(255, 77, 109, 0.15);
+            width: 100%; max-width: 450px;
+            position: relative; z-index: 10;
+            transform: translateY(0);
+            transition: transform 0.3s ease;
         }
-        h2 { color: var(--primary); text-align: center; margin-bottom: 5px; font-size: 28px; }
-        p.subtitle { text-align: center; color: #666; margin-bottom: 25px; font-size: 14px; }
-        .field { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-weight: 600; color: #444; }
+
+        .card:hover { transform: translateY(-5px); }
+
+        h2 { 
+            font-family: 'Dancing Script', cursive; 
+            color: var(--primary-dark); 
+            text-align: center; 
+            font-size: 36px; 
+            margin-bottom: 10px;
+        }
+
+        .subtitle { 
+            text-align: center; 
+            color: #888; 
+            margin-bottom: 30px; 
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+
+        .field { margin-bottom: 25px; position: relative; }
+        
+        label { 
+            display: block; margin-bottom: 8px; 
+            font-weight: 700; color: #555; font-size: 14px;
+        }
         
         input, select, textarea {
-            width: 100%; padding: 12px; border: 2px solid #f0f0f0;
-            border-radius: 10px; box-sizing: border-box; font-size: 16px;
-            transition: all 0.3s ease; font-family: inherit;
+            width: 100%; padding: 14px; border: 2px solid transparent;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px; font-size: 16px;
+            transition: all 0.4s ease; font-family: inherit;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
         }
-        input:focus, select:focus { border-color: var(--primary); outline: none; }
-        
+
+        input:focus, select:focus, textarea:focus { 
+            border-color: var(--accent); 
+            outline: none; 
+            background: #fff;
+            box-shadow: 0 0 15px rgba(255, 133, 161, 0.2);
+        }
+
         .recommendation-box {
-            background: #fffafa; border: 1px dashed var(--primary);
-            border-radius: 10px; padding: 12px; margin-top: 10px;
+            background: rgba(255, 77, 109, 0.05); 
+            border-left: 4px solid var(--primary);
+            border-radius: 8px; padding: 15px; margin-top: 15px;
             font-size: 14px; display: none;
+            animation: fadeIn 0.5s ease;
         }
-        .recommendation-box a { color: var(--link); text-decoration: underline; font-weight: bold; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         button {
-            width: 100%; background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white; border: none; padding: 16px; border-radius: 12px;
-            font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 10px;
+            width: 100%; 
+            background: linear-gradient(45deg, var(--primary), #ff758f);
+            color: white; border: none; padding: 18px; border-radius: 50px;
+            font-size: 18px; font-weight: 700; cursor: pointer; 
+            margin-top: 10px; transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(255, 77, 109, 0.3);
         }
-        .error { color: #d90429; font-size: 13px; margin-top: 5px; display: none; font-weight: 500; }
+
+        button:hover {
+            transform: scale(1.03);
+            box-shadow: 0 15px 25px rgba(255, 77, 109, 0.4);
+            filter: brightness(1.1);
+        }
+
+        .error { color: #d90429; font-size: 12px; margin-top: 8px; display: none; font-weight: 700; }
+
+        .floating-heart {
+            position: absolute; color: var(--primary);
+            opacity: 0.4; pointer-events: none;
+            animation: moveUp var(--duration) linear infinite;
+        }
+
+        @keyframes moveUp {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            50% { opacity: 0.6; }
+            100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+        }
+
+        /* Success Animation Styles */
+        @keyframes pulseEmoji {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
     </style>
 </head>
 <body>
 
+<div id="particles"></div>
+
 <div class="card">
-    <h2>Let's Go Hangout! ❤️</h2>
-    <p class="subtitle">First date</p>
-    
-    <form id="dateForm" action="https://formspree.io/f/mwvrgoak" method="POST">
+    <div id="formContent">
+        <h2>A Special Date... ❤️</h2>
+        <p class="subtitle">Will you be my guest?</p>
         
-        <div class="field">
-            <label>Your Email:</label>
-            <input type="email" name="email" placeholder="Human@gmail.com" required>
-        </div>
-
-        <div class="field">
-            <label for="date">Pick a day:</label>
-            <input type="date" id="date" name="selected_date" required>
-            <div id="dateError" class="error">⚠️ Only weekends or 2026 holidays, please!</div>
-        </div>
-
-        <div class="field">
-            <label>Where should we go?</label>
-            <select name="place" id="placeSelect" required>
-                <option value="" disabled selected>Pick a vibe...</option>
-                <option value="Hotpot">Hotpot Night 🍲</option>
-                <option value="Bubble Tea">Bubble Tea Date 🧋</option>
-                <option value="Italian Restaurant">Fancy Italian 🍝</option>
-                <option value="Movie Theater">Movies & Popcorn 🍿</option>
-                <option value="Coffee Shop">Cozy Coffee Date ☕</option>
-                <option value="Surprise Me">Surprise Me! ✨</option>
-                <option value="Something else">Something else...</option>
-            </select>
-            
-            <div id="recBox" class="recommendation-box">
-                📍 <strong>Suggested:</strong> <span id="recContent"></span>
+        <form id="dateForm" action="https://formspree.io/f/mwvrgoak" method="POST">
+            <div class="field">
+                <label>Your Email:</label>
+                <input type="email" name="email" placeholder="hello@beautiful.com" required>
             </div>
-        </div>
 
-        <div class="field">
-            <label>Any specific spot or message?</label>
-            <textarea name="message" rows="2" placeholder="Can't wait to see you soon!"></textarea>
-        </div>
+            <div class="field">
+                <label>When are you free?</label>
+                <input type="date" id="date" name="selected_date" required>
+                <div id="dateError" class="error">✨ I'm only free on weekends or holidays! ✨</div>
+            </div>
 
-        <button type="submit" id="submitBtn">Send Invitation</button>
-    </form>
+            <div class="field">
+                <label>The Vibe:</label>
+                <select name="place" id="placeSelect" required>
+                    <option value="" disabled selected>Select an adventure...</option>
+                    <option value="Hotpot">Hotpot Night 🍲</option>
+                    <option value="Bubble Tea">Bubble Tea Date 🧋</option>
+                    <option value="Italian Restaurant">Fancy Italian 🍝</option>
+                    <option value="Movie Theater">Movies & Popcorn 🍿</option>
+                    <option value="Coffee Shop">Cozy Coffee Date ☕</option>
+                    <option value="Surprise Me">Surprise Me! ✨</option>
+                    <option value="Something else">Something else...</option>
+                </select>
+                
+                <div id="recBox" class="recommendation-box">
+                    💖 <strong>How about:</strong> <span id="recContent"></span>
+                </div>
+            </div>
+
+            <div class="field">
+                <label>Any special requests?</label>
+                <textarea name="message" rows="2" placeholder="Tell me anything..."></textarea>
+            </div>
+
+            <button type="submit" id="submitBtn">Save the Date</button>
+        </form>
+    </div>
 </div>
 
 <script>
+    // Create floating heart particles
+    function createHearts() {
+        const container = document.getElementById('particles');
+        const count = 15;
+        for (let i = 0; i < count; i++) {
+            const heart = document.createElement('div');
+            heart.className = 'floating-heart';
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+            heart.style.setProperty('--duration', (Math.random() * 10 + 5) + 's');
+            heart.style.animationDelay = Math.random() * 5 + 's';
+            container.appendChild(heart);
+        }
+    }
+    createHearts();
+
     const dateInput = document.getElementById('date');
     const dateError = document.getElementById('dateError');
     const placeSelect = document.getElementById('placeSelect');
     const recBox = document.getElementById('recBox');
     const recContent = document.getElementById('recContent');
     const form = document.getElementById('dateForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const card = document.querySelector('.card');
 
-    // 2026 Ontario Statutory Holidays
-    const holidays2026 = [
-        "2026-01-01", // New Year's
-        "2026-02-16", // Family Day
-        "2026-04-03", // Good Friday
-        "2026-05-18", // Victoria Day
-        "2026-07-01", // Canada Day
-        "2026-08-03", // Civic Holiday
-        "2026-09-07", // Labour Day
-        "2026-10-12", // Thanksgiving
-        "2026-12-25", // Christmas
-        "2026-12-28"  // Boxing Day (Observed)
-    ];
+    const holidays2026 = ["2026-01-01", "2026-02-16", "2026-04-03", "2026-05-18", "2026-07-01", "2026-08-03", "2026-09-07", "2026-10-12", "2026-12-25", "2026-12-28"];
 
     const recommendations = {
         "Hotpot": { name: "Souper Hot Pot", link: "https://maps.app.goo.gl/dVh8k88TNpvz5e5E6" },
@@ -132,7 +232,7 @@
     placeSelect.addEventListener('change', function() {
         const data = recommendations[this.value];
         if (data) {
-            recContent.innerHTML = `<a href="${data.link}" target="_blank">${data.name}</a>`;
+            recContent.innerHTML = `<a href="${data.link}" target="_blank" style="color: #ff4d6d; text-decoration: none; border-bottom: 1px solid #ff4d6d;">${data.name}</a>`;
             recBox.style.display = 'block';
         }
     });
@@ -140,10 +240,9 @@
     dateInput.setAttribute('min', new Date().toISOString().split('T')[0]);
     
     dateInput.addEventListener('input', function() {
-        const selectedDate = this.value; // YYYY-MM-DD
+        const selectedDate = this.value;
         const dateObj = new Date(selectedDate + "T00:00:00");
-        const day = dateObj.getDay(); // 0 = Sunday, 6 = Saturday
-        
+        const day = dateObj.getDay(); 
         const isWeekend = (day === 0 || day === 6);
         const isHoliday = holidays2026.includes(selectedDate);
 
@@ -155,8 +254,78 @@
         }
     });
 
-    form.addEventListener('submit', function() {
-        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#ff4d6d', '#ffffff'] });
+    // Handle Form Submission with Animations
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = "Sending Love... 💌";
+
+        const formData = new FormData(form);
+        
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: { 'Accept': 'application/json' }
+            });
+
+            if (response.ok) {
+                // 1. Initial Confetti Burst
+                confetti({ 
+                    particleCount: 200, 
+                    spread: 80, 
+                    origin: { y: 0.6 }, 
+                    colors: ['#ff4d6d', '#ff85a1', '#ffffff'] 
+                });
+
+                // 2. Continuous Heart Rain from corners
+                const end = Date.now() + (3 * 1000);
+                (function frame() {
+                    confetti({
+                        particleCount: 2,
+                        angle: 60,
+                        spread: 55,
+                        origin: { x: 0 },
+                        colors: ['#ff4d6d']
+                    });
+                    confetti({
+                        particleCount: 2,
+                        angle: 120,
+                        spread: 55,
+                        origin: { x: 1 },
+                        colors: ['#ff85a1']
+                    });
+
+                    if (Date.now() < end) {
+                        requestAnimationFrame(frame);
+                    }
+                }());
+
+                // 3. Transform the card content
+                setTimeout(() => {
+                    card.innerHTML = `
+                        <div style="text-align: center; animation: fadeIn 1s ease;">
+                            <h2 style="font-size: 50px; font-family: 'Dancing Script', cursive; color: #c9184a;">Yay! 😍</h2>
+                            <p style="font-size: 18px; color: #555; margin: 20px 0; font-weight: 500;">It's a date!</p>
+                            <div style="font-size: 80px; display: inline-block; animation: pulseEmoji 1.5s infinite ease-in-out;">💌</div>
+                            <p style="color: #888; font-size: 13px; margin-top: 25px; line-height: 1.6;">
+                                I've received your request.<br>Can't wait to see you soon!
+                            </p>
+                        </div>
+                    `;
+                }, 400);
+
+            } else {
+                alert("Something went wrong. Please try again!");
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = "Save the Date";
+            }
+        } catch (error) {
+            alert("Error connecting to server. Please check your internet!");
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = "Save the Date";
+        }
     });
 </script>
 
